@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Bornali!</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+overflow:hidden;
+background:linear-gradient(135deg,#4facfe,#00f2fe);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+color:white;
+}
+
+.container{
+width:90%;
+max-width:700px;
+padding:30px;
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(12px);
+border-radius:20px;
+box-shadow:0 10px 35px rgba(0,0,0,.25);
+animation:fadeIn 2s ease;
+z-index:10;
+}
+
+h1{
+font-size:3rem;
+margin-bottom:15px;
+animation:pop 1.2s ease;
+}
+
+h2{
+font-size:1.7rem;
+margin-bottom:15px;
+}
+
+p{
+font-size:1.05rem;
+line-height:1.8;
+margin-bottom:20px;
+}
+
+button{
+padding:14px 30px;
+border:none;
+border-radius:40px;
+font-size:17px;
+cursor:pointer;
+background:#ffffff;
+color:#0077ff;
+font-weight:bold;
+transition:.3s;
+}
+
+button:hover{
+transform:scale(1.08);
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(30px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes pop{
+0%{transform:scale(.5);}
+80%{transform:scale(1.1);}
+100%{transform:scale(1);}
+}
+
+/* Balloons */
+
+.balloon{
+position:absolute;
+bottom:-150px;
+width:70px;
+height:90px;
+border-radius:50%;
+animation:float linear infinite;
+}
+
+.balloon:before{
+content:'';
+position:absolute;
+width:2px;
+height:90px;
+background:white;
+left:34px;
+top:85px;
+}
+
+@keyframes float{
+0%{
+transform:translateY(0);
+}
+100%{
+transform:translateY(-120vh);
+}
+}
+
+canvas{
+position:absolute;
+top:0;
+left:0;
+pointer-events:none;
+}
+
+/* Gift */
+
+.gift{
+font-size:70px;
+margin-bottom:20px;
+animation:bounce 2s infinite;
+}
+
+@keyframes bounce{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-12px);}
+}
+
+.footer{
+margin-top:20px;
+font-size:14px;
+opacity:.9;
+}
+
+@media(max-width:600px){
+
+h1{
+font-size:2.2rem;
+}
+
+h2{
+font-size:1.3rem;
+}
+
+p{
+font-size:.95rem;
+}
+
+.gift{
+font-size:55px;
+}
+
+}
+</style>
+
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="container">
+
+<div class="gift">🎁</div>
+
+<h1>Happy Birthday!</h1>
+
+<h2>Dear Bornali 🎉</h2>
+
+<p>
+Wishing you a day filled with happiness, laughter, and wonderful memories.
+May this new year of your life bring success, good health,
+new opportunities, and countless reasons to smile.
+Enjoy your special day and have an amazing year ahead!
+</p>
+
+<button onclick="celebrate()">
+🎊 Celebrate!
+</button>
+
+<div class="footer">
+Best Wishes for a Fantastic Birthday!
+</div>
+
+</div>
+
+<audio id="music" loop>
+<source src="birthday.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+// Balloons
+
+const colors=[
+"#ff4d6d",
+"#ffd93d",
+"#6bcB77",
+"#4d96ff",
+"#ff8fab",
+"#9d4edd",
+"#00c2a8"
+];
+
+for(let i=0;i<18;i++){
+
+let b=document.createElement("div");
+b.className="balloon";
+
+let size=50+Math.random()*30;
+
+b.style.width=size+"px";
+b.style.height=size*1.2+"px";
+
+b.style.left=Math.random()*100+"vw";
+
+b.style.background=colors[Math.floor(Math.random()*colors.length)];
+
+b.style.animationDuration=(8+Math.random()*6)+"s";
+
+b.style.animationDelay=Math.random()*5+"s";
+
+document.body.appendChild(b);
+
+}
+
+// Confetti
+
+const canvas=document.getElementById("confetti");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let pieces=[];
+
+for(let i=0;i<250;i++){
+
+pieces.push({
+
+x:Math.random()*canvas.width,
+
+y:Math.random()*canvas.height-canvas.height,
+
+r:Math.random()*8+4,
+
+d:Math.random()*250,
+
+color:colors[Math.floor(Math.random()*colors.length)],
+
+tilt:Math.random()*10,
+
+tiltAngle:0,
+
+speed:2+Math.random()*3
+
+});
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+pieces.forEach(p=>{
+
+ctx.beginPath();
+
+ctx.fillStyle=p.color;
+
+ctx.fillRect(p.x,p.y,p.r,p.r);
+
+});
+
+update();
+
+requestAnimationFrame(draw);
+
+}
+
+function update(){
+
+pieces.forEach(p=>{
+
+p.y+=p.speed;
+p.x+=Math.sin(p.d);
+
+if(p.y>canvas.height){
+
+p.y=-20;
+p.x=Math.random()*canvas.width;
+
+}
+
+});
+
+}
+
+draw();
+
+function celebrate(){
+
+const music=document.getElementById("music");
+
+music.play().catch(()=>{});
+
+alert("🎉 Happy Birthday, Bornali! Have a fantastic day filled with joy and success!");
+
+}
+
+window.onresize=function(){
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+};
+
+</script>
+
+</body>
+</html>
